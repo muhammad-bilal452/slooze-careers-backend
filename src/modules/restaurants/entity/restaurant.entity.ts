@@ -1,32 +1,28 @@
+import { MenuItem } from 'src/modules/menu-items/entity/menu-item.entity';
 import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
+  OneToMany,
   CreateDateColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { UserRole } from '../enum/role.enum';
 
-@Entity('users')
-export class User {
+@Entity('restaurants')
+export class Restaurant {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column()
+  @Column({ unique: true })
   name: string;
 
-  @Column({ unique: true })
-  email: string;
-
   @Column()
-  password: string;
+  country: string;
 
-  @Column({
-    type: 'enum',
-    enum: UserRole,
-    default: UserRole.MEMBER,
+  @OneToMany(() => MenuItem, (menuItem) => menuItem.restaurant, {
+    cascade: true,
   })
-  role: UserRole;
+  menuItems: MenuItem[];
 
   @CreateDateColumn()
   createdAt: Date;
