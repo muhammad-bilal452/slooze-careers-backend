@@ -1,3 +1,4 @@
+import { OrderItem } from 'src/modules/orders/entity/order-item.entity';
 import { Restaurant } from 'src/modules/restaurants/entity/restaurant.entity';
 import {
   Entity,
@@ -6,14 +7,17 @@ import {
   ManyToOne,
   CreateDateColumn,
   UpdateDateColumn,
+  Unique,
+  OneToMany,
 } from 'typeorm';
 
 @Entity('menu-items')
+@Unique(['name', 'restaurant'])
 export class MenuItem {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ unique: true })
+  @Column()
   name: string;
 
   @Column('decimal')
@@ -23,6 +27,9 @@ export class MenuItem {
     onDelete: 'CASCADE',
   })
   restaurant: Restaurant;
+
+  @OneToMany(() => OrderItem, (orderItem) => orderItem.menuItem)
+  orderItems: OrderItem[];
 
   @CreateDateColumn()
   createdAt: Date;

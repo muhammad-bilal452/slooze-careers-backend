@@ -6,9 +6,10 @@ import { CreateMenuItemDto } from '../menu-items/dto/create-menu-item.dto';
 import { Roles } from '../auth/decorators/roles.decorator';
 import { UserRole } from '../users/enum/role.enum';
 import { ApiBearerAuth } from '@nestjs/swagger';
+import { RolesGuard } from '../auth/guards/roles.gaurd';
 
 @Controller('restaurants')
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, RolesGuard)
 @ApiBearerAuth('access-token')
 export class RestaurantsController {
   constructor(private readonly restaurantsService: RestaurantsService) {}

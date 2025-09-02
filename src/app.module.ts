@@ -6,9 +6,8 @@ import { AuthModule } from './modules/auth/auth.module';
 import { DatabaseModule } from './modules/database/database.module';
 import { UserModule } from './modules/users/user.module';
 import { RestaurantsModule } from './modules/restaurants/restaurants.module';
-import { MenuItemsService } from './modules/menu-items/menu-items.service';
-import { MenuItemsController } from './modules/menu-items/menu-items.controller';
 import { MenuItemsModule } from './modules/menu-items/menu-items.module';
+import { OrdersModule } from './modules/orders/orders.module';
 
 @Module({
   imports: [
@@ -21,6 +20,7 @@ import { MenuItemsModule } from './modules/menu-items/menu-items.module';
     UserModule,
     RestaurantsModule,
     MenuItemsModule,
+    OrdersModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -4,8 +4,10 @@ import {
   Column,
   CreateDateColumn,
   UpdateDateColumn,
+  OneToMany,
 } from 'typeorm';
 import { UserRole } from '../enum/role.enum';
+import { Order } from 'src/modules/orders/entity/order.entity';
 
 @Entity('users')
 export class User {
@@ -20,6 +22,9 @@ export class User {
 
   @Column()
   password: string;
+
+  @OneToMany(() => Order, (order) => order.user)
+  orders: Order[];
 
   @Column({
     type: 'enum',

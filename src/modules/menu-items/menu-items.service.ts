@@ -53,4 +53,14 @@ export class MenuItemsService {
       relations: ['restaurant'],
     });
   }
+
+  async findOne(id: string): Promise<MenuItem> {
+    const menuItem = await this.menuItemRepository.findOne({
+      where: { id },
+    });
+    if (!menuItem) {
+      throw new NotFoundException(`Menu item with ID "${id}" not found`);
+    }
+    return menuItem;
+  }
 }

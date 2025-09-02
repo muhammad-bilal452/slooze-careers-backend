@@ -1,4 +1,5 @@
 import { MenuItem } from 'src/modules/menu-items/entity/menu-item.entity';
+import { Order } from 'src/modules/orders/entity/order.entity';
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -23,6 +24,9 @@ export class Restaurant {
     cascade: true,
   })
   menuItems: MenuItem[];
+
+  @OneToMany(() => Order, (order) => order.restaurant)
+  orders: Order[];
 
   @CreateDateColumn()
   createdAt: Date;
