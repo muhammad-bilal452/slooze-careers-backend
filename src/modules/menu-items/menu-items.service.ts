@@ -63,4 +63,9 @@ export class MenuItemsService {
     }
     return menuItem;
   }
+
+  async remove(id: string): Promise<void> {
+    const menuItem = await this.findOne(id);
+    await this.menuItemRepository.remove(menuItem);
+  }
 }

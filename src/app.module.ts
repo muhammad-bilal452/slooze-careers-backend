@@ -8,6 +8,7 @@ import { UserModule } from './modules/users/user.module';
 import { RestaurantsModule } from './modules/restaurants/restaurants.module';
 import { MenuItemsModule } from './modules/menu-items/menu-items.module';
 import { OrdersModule } from './modules/orders/orders.module';
+import { PaymentMethodModule } from './modules/payment-method/payment-method.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { OrdersModule } from './modules/orders/orders.module';
     RestaurantsModule,
     MenuItemsModule,
     OrdersModule,
+    PaymentMethodModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -10,6 +10,7 @@ import { UserRole } from '../users/enum/role.enum';
 import { OrderStatus } from './enum/order-status.entity';
 import { RestaurantsService } from '../restaurants/restaurants.service';
 import { MenuItemsService } from '../menu-items/menu-items.service';
+import { PaymentMethodsService } from '../payment-method/payment-method.service';
 
 @Injectable()
 export class OrdersService {
@@ -22,6 +23,7 @@ export class OrdersService {
 
     private restaurantService: RestaurantsService,
     private menuItemService: MenuItemsService,
+    private paymentMethodService: PaymentMethodsService,
   ) {}
 
   async create(createOrderDto: CreateOrderDto, user: User): Promise<Order> {
@@ -41,11 +43,19 @@ export class OrdersService {
       items.push(orderItem);
     }
 
+    let paymentMethod;
+    if (createOrderDto.paymentMethodId) {
+      paymentMethod = await this.paymentMethodService.findById(
+        createOrderDto.paymentMethodId,
+      );
+    }
+
     const order = this.orderRepository.create({
       restaurant,
       user,
       items,
       status: OrderStatus.PENDING,
+      paymentMethod,
     });
 
     return this.orderRepository.save(order);
@@ -77,5 +87,10 @@ export class OrdersService {
 
     order.status = OrderStatus.CANCELLED;
     return this.orderRepository.save(order);
+  }
+
+  async remove(id: string): Promise<void> {
+    const order = await this.findById(id);
+    await this.orderRepository.remove(order);
   }
 }

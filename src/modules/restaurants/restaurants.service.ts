@@ -55,4 +55,9 @@ export class RestaurantsService {
   async addMenuItem(id: string, createMenuItemDto: CreateMenuItemDto) {
     return this.menuItemService.create(id, createMenuItemDto);
   }
+
+  async remove(id: string): Promise<void> {
+    const restaurant = await this.findOne(id);
+    await this.restaurantRepository.remove(restaurant);
+  }
 }

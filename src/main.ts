@@ -21,8 +21,8 @@ async function bootstrap() {
 
   // Swagger config
   const config = new DocumentBuilder()
-    .setTitle('My API')
-    .setDescription('API documentation')
+    .setTitle('Slooze Api')
+    .setDescription('Slooze API documentation')
     .setVersion('1.0')
     .addBearerAuth(
       { type: 'http', scheme: 'bearer', bearerFormat: 'JWT' },

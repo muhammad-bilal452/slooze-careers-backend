@@ -12,6 +12,7 @@ import { Restaurant } from '../../restaurants/entity/restaurant.entity';
 
 import { OrderStatus } from '../enum/order-status.entity';
 import { OrderItem } from './order-item.entity';
+import { PaymentMethod } from 'src/modules/payment-method/entity/payment-method.entity';
 
 @Entity('orders')
 export class Order {
@@ -29,6 +30,9 @@ export class Order {
     eager: true,
   })
   items: OrderItem[];
+
+  @ManyToOne(() => PaymentMethod, { eager: true })
+  paymentMethod: PaymentMethod;
 
   @Column({ type: 'enum', enum: OrderStatus, default: OrderStatus.PENDING })
   status: OrderStatus;

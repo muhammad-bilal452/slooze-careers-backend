@@ -7,11 +7,13 @@ import { OrderItem } from './entity/order-item.entity';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RestaurantsModule } from '../restaurants/restaurants.module';
 import { MenuItemsModule } from '../menu-items/menu-items.module';
+import { PaymentMethodModule } from '../payment-method/payment-method.module';
 
 @Module({
   imports: [
     RestaurantsModule,
     MenuItemsModule,
+    PaymentMethodModule,
     TypeOrmModule.forFeature([Order, OrderItem]),
   ],
   providers: [OrdersService, JwtAuthGuard],
