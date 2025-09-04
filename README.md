@@ -45,7 +45,7 @@ cd slooze-backend
 ## 2. Install dependencies
 
 npm install
-# or
+or
 yarn install
 
 ## 3. Run the development server
