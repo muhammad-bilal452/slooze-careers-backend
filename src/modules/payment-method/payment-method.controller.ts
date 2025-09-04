@@ -27,7 +27,7 @@ export class PaymentMethodsController {
   constructor(private readonly paymentMethodService: PaymentMethodsService) {}
 
   @Get()
-  @Roles(UserRole.ADMIN, UserRole.MANAGER, UserRole.MEMBER)
+  @Roles(UserRole.ADMIN)
   async findAll() {
     const paymentMethods = await this.paymentMethodService.findAll();
     return ApiResponse.success(
@@ -37,7 +37,7 @@ export class PaymentMethodsController {
   }
 
   @Get(':id')
-  @Roles(UserRole.ADMIN, UserRole.MANAGER, UserRole.MEMBER)
+  @Roles(UserRole.ADMIN)
   async findById(@Param('id') id: string) {
     const paymentMethod = await this.paymentMethodService.findById(id);
     return ApiResponse.success(

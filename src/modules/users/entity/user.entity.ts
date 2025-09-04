@@ -23,6 +23,9 @@ export class User {
   @Column()
   password: string;
 
+  @Column()
+  country: string;
+
   @OneToMany(() => Order, (order) => order.user)
   orders: Order[];
 

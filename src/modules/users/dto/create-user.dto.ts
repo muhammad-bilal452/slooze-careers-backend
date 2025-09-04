@@ -29,6 +29,14 @@ export class CreateUserDto {
   @MinLength(8)
   password: string;
 
+  @ApiProperty({
+    description: 'Enter your coutnry name',
+    minLength: 2,
+    example: 'India',
+  })
+  @IsString()
+  country: string;
+
   @ApiPropertyOptional({
     description: 'Role of the user',
     enum: UserRole,

@@ -19,6 +19,8 @@ import { ApiBearerAuth } from '@nestjs/swagger';
 import { OrderStatus } from './enum/order-status.entity';
 import { RolesGuard } from '../auth/guards/roles.gaurd';
 import { ApiResponse } from 'src/common/api-response';
+import { UpdateOrderDto } from './dto/update-order.dto';
+import { PlaceOrderDto } from './dto/place-order.dto';
 
 @Controller('orders')
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -50,9 +52,13 @@ export class OrdersController {
 
   @Post(':id/checkout')
   @Roles(UserRole.ADMIN, UserRole.MANAGER)
-  async placeOrder(@Param('id') id: string) {
+  async placeOrder(
+    @Param('id') id: string,
+    @Body() placeOrderDto: PlaceOrderDto,
+  ) {
     const order = await this.ordersService.updateStatus(id, {
       status: OrderStatus.PLACED,
+      paymentMethodId: placeOrderDto.paymentMethodId,
     });
     return ApiResponse.success(order, 'Order placed successfully');
   }

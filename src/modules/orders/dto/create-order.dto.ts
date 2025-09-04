@@ -1,4 +1,4 @@
-import { IsArray, ValidateNested, IsUUID, IsOptional } from 'class-validator';
+import { IsArray, ValidateNested, IsUUID } from 'class-validator';
 import { Type } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
 import { OrderItemDto } from './order-item.dto';
@@ -17,7 +17,10 @@ export class CreateOrderDto {
   @Type(() => OrderItemDto)
   items: OrderItemDto[];
 
-  @IsOptional()
+  @ApiProperty({
+    description: 'Payment method ID for the order',
+    example: 'uuid-of-payment-method',
+  })
   @IsUUID()
-  paymentMethodId?: string;
+  paymentMethodId: string;
 }

@@ -5,7 +5,7 @@ import {
   MinLength,
   IsEnum,
 } from 'class-validator';
-import { ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { UserRole } from '../enum/role.enum';
 
 export class UpdateUserDto {
@@ -34,6 +34,15 @@ export class UpdateUserDto {
   @IsString()
   @MinLength(8)
   password?: string;
+
+  @ApiProperty({
+    description: 'Enter your coutnry name',
+    minLength: 2,
+    example: 'India',
+  })
+  @IsOptional()
+  @IsString()
+  country: string;
 
   @ApiPropertyOptional({
     description: 'Updated role of the user',

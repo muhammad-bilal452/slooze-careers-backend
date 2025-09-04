@@ -24,7 +24,7 @@ export class OrderItem {
   quantity: number;
 
   @Column('decimal')
-  price: number; // snapshot of menuItem price
+  price: number; 
 
   @CreateDateColumn()
   createdAt: Date;

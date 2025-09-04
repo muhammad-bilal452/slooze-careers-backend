@@ -32,8 +32,9 @@ export class MenuItemsService {
     }
 
     const existing = await this.menuItemRepository.findOne({
-      where: { name: createMenuItemDto.name },
+      where: { name: createMenuItemDto.name, restaurant: { id: restaurantId } },
     });
+
     if (existing) {
       throw new ConflictException(
         `Menu item with name "${createMenuItemDto.name}" already exists`,

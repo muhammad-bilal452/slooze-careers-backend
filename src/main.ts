@@ -10,6 +10,13 @@ async function bootstrap() {
 
   const configService = app.get(ConfigService);
 
+  app.enableCors({
+    origin: configService.get<number>('FRONT_END_URL'),
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Accept', 'Authorization'],
+    credentials: true,
+  });
+
   // Global validation
   app.useGlobalPipes(
     new ValidationPipe({

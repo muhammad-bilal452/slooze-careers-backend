@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Order } from './entity/order.entity';
@@ -27,11 +31,16 @@ export class OrdersService {
   ) {}
 
   async create(createOrderDto: CreateOrderDto, user: User): Promise<Order> {
-    const restaurant = await this.restaurantService.findOne(
-      createOrderDto.restaurantId,
-    );
+    let order = await this.orderRepository.findOne({
+      where: {
+        user: { id: user.id },
+        restaurant: { id: createOrderDto.restaurantId },
+        status: OrderStatus.PENDING,
+      },
+      relations: ['items', 'items.menuItem', 'restaurant', 'paymentMethod'],
+    });
 
-    const items: OrderItem[] = [];
+    const newItems: OrderItem[] = [];
     for (const itemDto of createOrderDto.items) {
       const menuItem = await this.menuItemService.findOne(itemDto.menuItemId);
 
@@ -40,7 +49,8 @@ export class OrdersService {
         quantity: itemDto.quantity,
         price: menuItem.price,
       });
-      items.push(orderItem);
+
+      newItems.push(orderItem);
     }
 
     let paymentMethod;
@@ -50,19 +60,42 @@ export class OrdersService {
       );
     }
 
-    const order = this.orderRepository.create({
-      restaurant,
-      user,
-      items,
-      status: OrderStatus.PENDING,
-      paymentMethod,
-    });
+    if (order) {
+      for (const newItem of newItems) {
+        const existingItem = order.items.find(
+          (i) => i.menuItem.id === newItem.menuItem.id,
+        );
+        if (existingItem) {
+          existingItem.quantity += newItem.quantity;
+        } else {
+          order.items.push(newItem);
+        }
+      }
 
-    return this.orderRepository.save(order);
+      if (paymentMethod) {
+        order.paymentMethod = paymentMethod;
+      }
+
+      return this.orderRepository.save(order);
+    } else {
+      const restaurant = await this.restaurantService.findOne(
+        createOrderDto.restaurantId,
+      );
+
+      order = this.orderRepository.create({
+        restaurant,
+        user,
+        items: newItems,
+        status: OrderStatus.PENDING,
+        paymentMethod,
+      });
+
+      return this.orderRepository.save(order);
+    }
   }
 
   async findAll(user: User): Promise<Order[]> {
-    if (user.role === UserRole.ADMIN) {
+    if (user.role === UserRole.ADMIN || user.role === UserRole.MANAGER) {
       return this.orderRepository.find();
     } else {
       return this.orderRepository.find({ where: { user: { id: user.id } } });
@@ -75,10 +108,18 @@ export class OrdersService {
     return order;
   }
 
-  async updateStatus(id: string, dto: UpdateOrderDto): Promise<Order> {
+  async updateStatus(
+    id: string,
+    updateOrderDto: UpdateOrderDto,
+  ): Promise<Order> {
     const order = await this.findById(id);
 
-    order.status = dto.status ?? order.status;
+    const paymentMethod = await this.paymentMethodService.findById(
+      updateOrderDto.paymentMethodId,
+    );
+
+    order.paymentMethod = paymentMethod;
+    order.status = updateOrderDto.status ?? order.status;
     return this.orderRepository.save(order);
   }
 
